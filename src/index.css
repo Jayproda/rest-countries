@@ -1,0 +1,105 @@
+:root {
+  --blue-900: hsl(209, 23%, 22%);
+  --blue-950: hsl(207, 26%, 17%);
+  --grey-950: hsl(200, 15%, 8%);
+  --grey-400: hsl(0, 0%, 50%);
+  --grey-50: hsl(0, 0%, 99%);
+  --white: hsl(0, 100%, 100%);
+
+  --text: var(--grey-950);
+  --text-muted: var(--grey-400);
+  --surface: var(--white);
+  --bg: var(--grey-50);
+  --border: hsl(0, 0%, 90%);
+  --shadow:
+    rgba(0, 0, 0, 0.06) 0 2px 8px 0, rgba(0, 0, 0, 0.03) 0 8px 24px 0;
+
+  --sans: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 14px/145% var(--sans);
+  letter-spacing: 0;
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+:root[data-theme="dark"] {
+  --text: var(--white);
+  --text-muted: hsl(0, 0%, 82%);
+  --surface: var(--blue-900);
+  --bg: var(--blue-950);
+  --border: hsl(209, 23%, 28%);
+  --shadow:
+    rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --text: var(--white);
+    --text-muted: hsl(0, 0%, 82%);
+    --surface: var(--blue-900);
+    --bg: var(--blue-950);
+    --border: hsl(209, 23%, 28%);
+    --shadow:
+      rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
+    color-scheme: dark;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 800;
+  color: var(--text);
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+h2 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--surface);
+}
