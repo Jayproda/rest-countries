@@ -1,3 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-body: var(--text);
+  --color-muted: var(--text-muted);
+  --color-rule: var(--border);
+  --font-sans: var(--sans);
+}
+
 :root {
   --blue-900: hsl(209, 23%, 22%);
   --blue-950: hsl(207, 26%, 17%);
@@ -11,8 +22,7 @@
   --surface: var(--white);
   --bg: var(--grey-50);
   --border: hsl(0, 0%, 90%);
-  --shadow:
-    rgba(0, 0, 0, 0.06) 0 2px 8px 0, rgba(0, 0, 0, 0.03) 0 8px 24px 0;
+  --shadow: rgba(0, 0, 0, 0.06) 0 2px 8px 0, rgba(0, 0, 0, 0.03) 0 8px 24px 0;
 
   --sans: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
@@ -27,7 +37,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
 :root[data-theme="dark"] {
@@ -36,8 +45,7 @@
   --surface: var(--blue-900);
   --bg: var(--blue-950);
   --border: hsl(209, 23%, 28%);
-  --shadow:
-    rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
+  --shadow: rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
   color-scheme: dark;
 }
 
@@ -48,8 +56,7 @@
     --surface: var(--blue-900);
     --bg: var(--blue-950);
     --border: hsl(209, 23%, 28%);
-    --shadow:
-      rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
+    --shadow: rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
     color-scheme: dark;
   }
 }
@@ -57,6 +64,18 @@
 #root {
   width: 100%;
   min-height: 100svh;
+}
+
+* {
+  box-sizing: border-box;
+  /* hide scroll bars */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+/* hide scroll bars */
+*::-webkit-scrollbar {
+  display: none;
+  width: 0px;
 }
 
 body {

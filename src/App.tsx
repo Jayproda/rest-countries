@@ -28,16 +28,18 @@ function App() {
   return (
     <div className="app-shell">
       <header className="site-header">
-        <h1>Where in the world?</h1>
-        <button
-          className="theme-toggle"
-          type="button"
-          aria-label={`Switch to ${nextTheme} mode`}
-          aria-pressed={theme === "dark"}
-          onClick={() => setTheme(nextTheme)}
-        >
-          {theme === "light" ? "Dark Mode" : "Light Mode"}
-        </button>
+        <div className="container mx-auto flex items-center justify-between">
+          <h1>Where in the world?</h1>
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label={`Switch to ${nextTheme} mode`}
+            aria-pressed={theme === "dark"}
+            onClick={() => setTheme(nextTheme)}
+          >
+            {theme === "light" ? "Dark Mode" : "Light Mode"}
+          </button>
+        </div>
       </header>
 
       <main className="content-panel" aria-label="Countries explorer">

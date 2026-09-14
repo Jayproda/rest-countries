@@ -1,0 +1,17 @@
+import type { SVGProps } from "react";
+
+const ArrowUp = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    fill="#000000"
+    width="20px"
+    height="20px"
+    viewBox="-5 -7.5 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMinYMin"
+    className="jam jam-chevron-up"
+    {...props}
+  >
+    <path d="M7.071 2.828l-4.95 4.95A1 1 0 0 1 .707 6.364L6.364.707a1 1 0 0 1 1.414 0l5.657 5.657a1 1 0 0 1-1.414 1.414l-4.95-4.95z" />
+  </svg>
+);
+export default ArrowUp;
