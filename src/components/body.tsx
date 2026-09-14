@@ -147,7 +147,7 @@ const body = () => {
               <div
                 key={info?.name + info?.nativeName}
                 onClick={(e) => handleViewMore(info)}
-                className="flex flex-col gap-4 bg-surface shadow rounded-md pb-10 w-full"
+                className="flex flex-col gap-4 bg-surface shadow rounded-md pb-10 w-full hover:cursor-pointer hover:scale-105"
               >
                 <div
                   className="w-full h-64 md:h-60 rounded-t-md bg-center bg-cover bg-no-repeat shadow"
