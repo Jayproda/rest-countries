@@ -17,12 +17,17 @@
   --grey-50: hsl(0, 0%, 99%);
   --white: hsl(0, 100%, 100%);
 
-  --text: var(--grey-950);
-  --text-muted: var(--grey-400);
-  --surface: var(--white);
-  --bg: var(--grey-50);
-  --border: hsl(0, 0%, 90%);
-  --shadow: rgba(0, 0, 0, 0.06) 0 2px 8px 0, rgba(0, 0, 0, 0.03) 0 8px 24px 0;
+  --text: light-dark(var(--grey-950), var(--white));
+  --text-muted: light-dark(var(--grey-400), hsl(0, 0%, 82%));
+  --surface: light-dark(var(--white), var(--blue-900));
+  --bg: light-dark(var(--grey-50), var(--blue-950));
+  --border: light-dark(hsl(0, 0%, 90%), hsl(209, 23%, 28%));
+  --shadow: light-dark(
+    rgba(0, 0, 0, 0.06) 0 2px 8px 0,
+      rgba(0, 0, 0, 0.03) 0 8px 24px 0,
+    rgba(0, 0, 0, 0.18) 0 2px 8px 0,
+      rgba(0, 0, 0, 0.14) 0 8px 24px 0
+  );
 
   --sans: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: "Nunito Sans", system-ui, "Segoe UI", Roboto, sans-serif;
@@ -30,7 +35,7 @@
 
   font: 14px/145% var(--sans);
   letter-spacing: 0;
-  color-scheme: light;
+  color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -39,26 +44,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-:root[data-theme="dark"] {
-  --text: var(--white);
-  --text-muted: hsl(0, 0%, 82%);
-  --surface: var(--blue-900);
-  --bg: var(--blue-950);
-  --border: hsl(209, 23%, 28%);
-  --shadow: rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
-  color-scheme: dark;
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --text: var(--white);
-    --text-muted: hsl(0, 0%, 82%);
-    --surface: var(--blue-900);
-    --bg: var(--blue-950);
-    --border: hsl(209, 23%, 28%);
-    --shadow: rgba(0, 0, 0, 0.18) 0 2px 8px 0, rgba(0, 0, 0, 0.14) 0 8px 24px 0;
-    color-scheme: dark;
-  }
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 #root {

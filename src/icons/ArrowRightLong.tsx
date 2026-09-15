@@ -15,8 +15,8 @@ const ArrowRightLong = ({
   ...props
 }: IProps) => (
   <svg
-    width={30}
-    height={22}
+    width={width}
+    height={height}
     viewBox="0 0 400 400"
     fill="none"
     className={className}

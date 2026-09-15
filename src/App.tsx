@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import Body from "./components/body";
+import CountryExplorer from "./components/CountryExplorer";
 
 type Theme = "light" | "dark";
 
@@ -43,7 +43,7 @@ function App() {
       </header>
 
       <main className="content-panel" aria-label="Countries explorer">
-        <Body />
+        <CountryExplorer />
       </main>
     </div>
   );
