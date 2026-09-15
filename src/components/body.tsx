@@ -146,7 +146,7 @@ const body = () => {
             {countries?.map((info) => (
               <div
                 key={info?.name + info?.nativeName}
-                onClick={(e) => handleViewMore(info)}
+                onClick={() => handleViewMore(info)}
                 className="flex flex-col gap-4 bg-surface shadow rounded-md pb-10 w-full hover:cursor-pointer hover:scale-105"
               >
                 <div
