@@ -1,19 +1,20 @@
 import data from "../../data.json";
-import type { COUNTRY } from "./body";
+import type { Country } from "./body";
 import ArrowRightLong from "../icons/arrow-right-long";
 
 interface IProps {
   handleBack: () => void;
-  info: COUNTRY;
+  handleCountrySelect: (country: Country) => void;
+  info: Country;
 }
 
-const Info = ({ handleBack, info }: IProps) => {
-  const borderCountries = info?.borders?.map((border) => {
+const Info = ({ handleBack, handleCountrySelect, info }: IProps) => {
+  const borderCountries = info.borders?.flatMap((border) => {
     const country = data?.find(
       (data) => data?.alpha3Code === border || data?.alpha2Code === border,
     );
 
-    return country?.name ? country?.name : border;
+    return country ? [country] : [];
   });
 
   return (
@@ -28,13 +29,11 @@ const Info = ({ handleBack, info }: IProps) => {
       </button>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <div
-          className="w-full md:max-w-sm h-60 xs:h-72 sm:h-80 rounded-t-md bg-center bg-cover bg-no-repeat shadow lg:col-span-1"
-          style={{
-            backgroundImage: `url('${info?.flag}')` || undefined,
-            backgroundPosition: "50% 50%",
-          }}
-        ></div>
+        <img
+          src={info.flag}
+          alt={`Flag of ${info.name}`}
+          className="w-full md:max-w-sm h-60 xs:h-72 sm:h-80 rounded-t-md object-cover shadow lg:col-span-1"
+        />
 
         <div className="grid gap-5 lg:col-span-2">
           <h3 className="text-2xl font-bold">{info?.name}</h3>
@@ -110,10 +109,15 @@ const Info = ({ handleBack, info }: IProps) => {
               Border Countries:
             </h4>
             <div className="flex flex-wrap gap-2">
-              {borderCountries?.map((border) => (
-                <div className="py-1 px-4 bg-surface shadow border/5">
-                  {border}
-                </div>
+              {borderCountries?.map((borderCountry) => (
+                <button
+                  key={borderCountry.alpha3Code}
+                  className="py-1 px-4 bg-surface text-body shadow border/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-body focus-visible:ring-offset-2"
+                  type="button"
+                  onClick={() => handleCountrySelect(borderCountry)}
+                >
+                  {borderCountry.name}
+                </button>
               ))}
             </div>
           </div>

@@ -46,7 +46,7 @@
 
 .content-panel {
   padding: 48px clamp(16px, 5vw, 80px);
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 @media (max-width: 520px) {

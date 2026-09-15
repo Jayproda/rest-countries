@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import data from "../../data.json";
 
 import SearchIcon from "../icons/search";
-import ArrowDown from "../icons/arrow-down";
-import ArrowUp from "../icons/arrow-up";
 import Info from "./info";
 
 const REGIONS = [
@@ -14,74 +12,84 @@ const REGIONS = [
   { value: "Oceania", label: "Oceania" },
 ];
 
-export type COUNTRY = (typeof data)[0];
-export type REGION = (typeof REGIONS)[0];
+export type Country = (typeof data)[0];
 
-const body = () => {
+const getCountryFromUrl = () => {
+  const countryCode = new URLSearchParams(window.location.search).get(
+    "country",
+  );
+
+  return countryCode
+    ? data.find(
+        (country) =>
+          country.alpha3Code.toLowerCase() === countryCode.toLowerCase(),
+      )
+    : undefined;
+};
+
+const Body = () => {
   const [searchText, setSearchText] = useState("");
-  const [countries, setCountries] = useState<COUNTRY[]>(data);
-  const [region, setRegion] = useState<REGION>({
-    value: "",
-    label: "Filter by Region",
-  });
-  const [isRegionOpen, setIsRegionOpen] = useState(false);
-  const [viewMore, setViewMore] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<COUNTRY | undefined>(
-    undefined,
+  const [region, setRegion] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
+    getCountryFromUrl,
   );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
+  const countries = useMemo(() => {
+    const search = searchText.trim().toLowerCase();
+
+    return data.filter((country) => {
+      const matchesSearch =
+        !search ||
+        country.name.toLowerCase().includes(search) ||
+        country.nativeName.toLowerCase().includes(search) ||
+        country.demonym.toLowerCase().includes(search);
+      const matchesRegion =
+        !region || country.region.toLowerCase() === region.toLowerCase();
+
+      return matchesSearch && matchesRegion;
+    });
+  }, [searchText, region]);
+
   useEffect(() => {
-    if (searchText) {
-      const sameCase = (text: string) => text?.toLowerCase()?.toString();
+    const handlePopState = () => setSelectedCountry(getCountryFromUrl());
 
-      const filteredData = data?.filter(
-        (info) =>
-          sameCase(info?.name)?.includes(searchText) ||
-          sameCase(info?.nativeName).includes(searchText) ||
-          sameCase(info?.demonym)?.includes(searchText),
-      );
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
-      setCountries(filteredData);
-    } else {
-      setCountries(data);
-    }
-
-    return () => {};
-  }, [searchText]);
-
-  const handleRegion = (info: REGION) => {
-    const countries = data?.filter(
-      (countryInfo) =>
-        countryInfo?.region?.toUpperCase() === info?.value?.toUpperCase(),
+  const handleViewMore = (country: Country) => {
+    const countryUrl = new URL(
+      import.meta.env.BASE_URL,
+      window.location.origin,
     );
 
-    setCountries(countries);
-    setRegion(info);
-    setIsRegionOpen(false);
-  };
+    countryUrl.searchParams.set("country", country.alpha3Code.toLowerCase());
 
-  const handleViewMore = (country: COUNTRY) => {
-    setViewMore(true);
+    window.history.pushState({}, "", countryUrl);
     setSelectedCountry(country);
   };
 
   const handleViewLess = () => {
-    setViewMore(false);
+    window.history.replaceState({}, "", import.meta.env.BASE_URL);
     setSelectedCountry(undefined);
   };
 
   return (
     <div className="container mx-auto">
-      {viewMore && selectedCountry ? (
-        <Info handleBack={handleViewLess} info={selectedCountry} />
+      {selectedCountry ? (
+        <Info
+          handleBack={handleViewLess}
+          handleCountrySelect={handleViewMore}
+          info={selectedCountry}
+        />
       ) : (
         <div className="w-full flex flex-col gap-8">
           {/* search and filter through data */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-8">
             {/* Search component */}
             <form
               onSubmit={(e) => e.preventDefault()}
@@ -89,99 +97,77 @@ const body = () => {
             >
               <SearchIcon />
               <input
-                className="bg-transparent outline-none border-none text-body"
+                className="bg-transparent border-none text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-body focus-visible:ring-offset-2"
                 type="text"
                 placeholder="Search for a country..."
+                aria-label="Search for a country"
                 value={searchText}
                 onChange={handleSearch}
               />
             </form>
 
             {/* Region component */}
-            <div
-              id="region"
-              className="region-input flex flex-col gap-2 justify-between w-52 md:w-xs relative"
+            <select
+              aria-label="Filter by region"
+              className="region-input bg-surface rounded-md p-4 shadow h-16 w-52 md:w-xs text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-body focus-visible:ring-offset-2"
+              value={region}
+              onChange={(event) => setRegion(event.target.value)}
             >
-              <input
-                id="region-filter"
-                name="region"
-                type="checkbox"
-                className="peer hidden"
-                checked={isRegionOpen}
-                onChange={(e) => setIsRegionOpen(e.target.checked)}
-              />
+              <option value="">All regions</option>
+              {REGIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-              <label
-                htmlFor="region-filter"
-                className="flex items-center justify-between bg-surface rounded-md p-4 shadow h-16 w-full"
-              >
-                <span>{region?.label}</span>
+          {countries?.length > 0 ? (
+            <div className="w-full grid flex-col gap-8 px-8 sm:px-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between">
+              {countries?.map((info) => (
+                <button
+                  key={info.alpha3Code}
+                  type="button"
+                  onClick={() => handleViewMore(info)}
+                  className="flex flex-col gap-4 bg-surface text-body text-left border-0 shadow rounded-md pb-10 w-full cursor-pointer hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-body focus-visible:ring-offset-4"
+                >
+                  <img
+                    src={info.flag}
+                    alt=""
+                    loading="lazy"
+                    className="w-full h-64 md:h-60 rounded-t-md object-cover shadow"
+                  />
 
-                <span className="text-accent">
-                  {isRegionOpen ? (
-                    <ArrowUp className="arrowUp" fill="currentColor" />
-                  ) : (
-                    <ArrowDown className="arrowDown" fill="currentColor" />
-                  )}
-                </span>
-              </label>
+                  <span className="text-2xl font-bold px-4">{info.name}</span>
 
-              <div className="hidden peer-checked:block peer-checked:absolute top-18 bg-surface rounded-md p-4 shadow w-full z-10">
-                <div className="flex flex-col gap-1 items-start">
-                  {REGIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => handleRegion(option)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                  <span className="flex flex-col gap-2 px-4">
+                    <span>
+                      <span className="font-semibold">Population: </span>
+                      <span>{info.population}</span>
+                    </span>
+
+                    <span>
+                      <span className="font-semibold">Region: </span>
+                      <span>{info.region}</span>
+                    </span>
+
+                    <span>
+                      <span className="font-semibold">Capital: </span>
+                      <span>{info.capital}</span>
+                    </span>
+                  </span>
+                </button>
+              ))}
             </div>
-          </div>
-
-          <div className="grid flex-col gap-8 px-8 sm:px-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between">
-            {countries?.map((info) => (
-              <div
-                key={info?.name + info?.nativeName}
-                onClick={() => handleViewMore(info)}
-                className="flex flex-col gap-4 bg-surface shadow rounded-md pb-10 w-full hover:cursor-pointer hover:scale-105"
-              >
-                <div
-                  className="w-full h-64 md:h-60 rounded-t-md bg-center bg-cover bg-no-repeat shadow"
-                  style={{
-                    backgroundImage: `url('${info?.flag}')` || undefined,
-                    backgroundPosition: "50% 50%",
-                  }}
-                ></div>
-
-                <h3 className="text-2xl font-bold px-4">{info?.name}</h3>
-
-                <div className="flex flex-col gap-2 px-4">
-                  <p>
-                    <span className="font-semibold">Population: </span>
-                    <span>{info?.population}</span>
-                  </p>
-
-                  <p>
-                    <span className="font-semibold">Region: </span>
-                    <span>{info?.region}</span>
-                  </p>
-
-                  <p>
-                    <span className="font-semibold">Capital: </span>
-                    <span>{info?.capital}</span>
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          ) : (
+            <div>
+              <p>No results found</p>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
 
-export default body;
+export default Body;
