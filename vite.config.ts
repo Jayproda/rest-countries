@@ -4,6 +4,6 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/rest-countries.github.io/",
+  base: process.env.VERCEL ? "/" : "/rest-countries.github.io/",
   plugins: [react(), tailwindcss()],
 });
